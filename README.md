@@ -8,9 +8,7 @@
 
 ### Environment
 ```
-pipenv
-
-The folloing is the steps to build pipenv environment:
+The following is the steps to build pipenv environment:
 $ cd energy_trader
 $ pipenv install 
 $ pipenv shell
