@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[27]:
+# In[15]:
 
 
 import pandas as pd
@@ -14,8 +14,8 @@ import time
 import argparse
 import loader ##  loader data and process.
 import model  ##  Model architecture.
-
-
+import datetime
+import time
 import csv
 import glob
 import random
@@ -192,7 +192,7 @@ def init_predict(generation_data_path, consumption_data_path):
     
 
 
-# In[28]:
+# In[19]:
 
 
 #################################################################################################################################
@@ -445,13 +445,23 @@ def init_agent(info_in_hour_list, request_gen_rate_list):
     total_bill_arr= np.zeros(6)
     total_bill_buy_arr= np.zeros(6)
     total_bill_sell_arr= np.zeros(6)
-    for c, (time , generate, consumption) in enumerate(info_in_hour_list):
+    month_name_2_index_list= ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    for c, (time_info , generate, consumption) in enumerate(info_in_hour_list):
         if c== 0 or len(generate)== 0:
             continue
       
         generate= float(generate)
         consumption= float(consumption)
-        time_in_h= time.split(' ')[1]
+        time_in_h= time_info.split(' ')[1]
+        time_y= int(time_info.split('-')[0])
+        time_m= int(time_info.split('-')[1])
+        time_d= int(time_info.split('-')[2].split(' ')[0])
+        current_date_2_sec= datetime.datetime(time_y, time_m, time_d).timestamp()
+        target_date_sce= int(current_date_2_sec+ 3600* 24* 7)
+        target_date= time.ctime(target_date_sce)
+        target_date_y, target_date_m, target_date_d= int(target_date[-4:]), int(month_name_2_index_list.index(target_date[4:7]))+ 1, int(target_date[8:11])
+        target_date_m, target_date_d= "{:02d}".format(target_date_m), "{:02d}".format(target_date_d)
+        target_date_time_format= str(target_date_y)+'-'+ str(target_date_m)+'-'+ str(target_date_d)+' '+ str(time_in_h)
             
         if generate- consumption> 0:
             state_in_h= [1, 0]
@@ -486,7 +496,7 @@ def init_agent(info_in_hour_list, request_gen_rate_list):
         ori_energy+= generate
         ori_consumption+= consumption
         
-        amount= total_energy- total_consumption
+        amount= round(total_energy- total_consumption, 2)
         if 1 in update_state and total_energy- total_consumption> 0 and in_sell_time and amount!= 0: # Sell action
           
             action= [1, 0]
@@ -499,14 +509,15 @@ def init_agent(info_in_hour_list, request_gen_rate_list):
             else:
                 action_name= 'buy'
             for i, price in enumerate(price_range):
-                action_list.append([time_in_h, action_name, price, amount])
-                action_history_list.append([time_in_h, action, price, amount, remaining, bill_list[i]])
-                state_history_list.append([time_in_h, update_state, action, price, amount, remaining, bill_list[i]])
+                price= round(price, 2)
+                action_list.append([target_date_time_format, action_name, price, amount])
+                action_history_list.append([target_date_time_format, action, price, amount, remaining, bill_list[i]])
+                state_history_list.append([target_date_time_format, update_state, action, price, amount, remaining, bill_list[i]])
             total_bill_sell_arr= total_bill_sell_arr+ np.array(bill_list)* amount
             
         if update_state== [0, 0] and in_buy_time:  # Buy action
             action= [0, 1]
-            amount= abs(amount)
+            amount= round(abs(amount), 2)
             total_energy+= amount
             remaining= total_energy- total_consumption
             price_range, bill_list, prioirty= get_price(time_in_h, action, amount, market_price, request_gen_rate_list)
@@ -516,14 +527,16 @@ def init_agent(info_in_hour_list, request_gen_rate_list):
             else:
                 action_name= 'buy'
             for i, price in enumerate(price_range):
-                action_list.append([time_in_h, action_name, price, amount])
-                action_history_list.append([time_in_h, action, price, amount, remaining, bill_list[i]])
-                state_history_list.append([time_in_h, update_state, action, price, amount, remaining, bill_list[i]])
+                price= round(price, 2)
+                action_list.append([target_date_time_format, action_name, price, amount])
+                action_history_list.append([target_date_time_format, action, price, amount, remaining, bill_list[i]])
+                state_history_list.append([target_date_time_format, update_state, action, price, amount, remaining, bill_list[i]])
             total_bill_buy_arr= total_bill_buy_arr+ np.array(bill_list)* amount
             
         if in_sell_time:  # Append sell
+            print ('in sell time')
             action= [1, 0]
-            amount= abs(total_energy- total_consumption)* 0.8
+            amount= round(abs(total_energy- total_consumption)* 0.8, 2)
             if amount== 0:
                 continue
             total_energy-= amount
@@ -535,16 +548,18 @@ def init_agent(info_in_hour_list, request_gen_rate_list):
                 action_name= 'sell'
             else:
                 action_name= 'buy'
+                
             for i, price in enumerate(price_range):
-                action_list.append([time_in_h, action_name, price, amount])
-                action_history_list.append([time_in_h, action, price, amount, remaining, bill_list[i]])
-                state_history_list.append([time_in_h, update_state, action, price, amount, remaining, bill_list[i]])
+                price= round(price, 2)
+                action_list.append([target_date_time_format, action_name, price, amount])
+                action_history_list.append([target_date_time_format, action, price, amount, remaining, bill_list[i]])
+                state_history_list.append([target_date_time_format, update_state, action, price, amount, remaining, bill_list[i]])
             total_bill_sell_arr= total_bill_sell_arr+ np.array(bill_list)* amount
             
         if in_buy_time:  # Append buy
           
             action= [0, 1]
-            amount= abs(total_energy- total_consumption)* 0.8
+            amount= round(abs(total_energy- total_consumption)* 0.8)
             total_energy+= amount
             remaining= total_energy- total_consumption
             price_range, bill_list, prioirty= get_price(time_in_h, action, amount, market_price, request_gen_rate_list)
@@ -554,10 +569,12 @@ def init_agent(info_in_hour_list, request_gen_rate_list):
                 action_name= 'sell'
             else:
                 action_name= 'buy'
+                
             for i, price in enumerate(price_range):
-                action_list.append([time_in_h, action_name, price, amount])
-                action_history_list.append([time_in_h, action, price, amount, remaining, bill_list[i]])
-                state_history_list.append([time_in_h, update_state, action, price, amount, remaining, bill_list[i]])
+                price= round(price, 2)
+                action_list.append([target_date_time_format, action_name, price, amount])
+                action_history_list.append([target_date_time_format, action, price, amount, remaining, bill_list[i]])
+                state_history_list.append([target_date_time_format, update_state, action, price, amount, remaining, bill_list[i]])
             total_bill_buy_arr= total_bill_buy_arr+ np.array(bill_list)* amount
         
         
@@ -610,7 +627,7 @@ def save_output_data(output_data_dir, data_list):
 
         
 
-  
+    
 
 
 
@@ -634,12 +651,6 @@ if __name__ == "__main__":
     
     
     
-
-
-
-
-# In[ ]:
-
 
 
 
