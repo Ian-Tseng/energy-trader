@@ -1,7 +1,7 @@
 # Energy trader
 
 ### Idea
-1. The solar device generate less energy or higher energy in specific time and a consumption pattern that show a wave in specific time. 
+1. 
 2. According above patterns , find the best price rate in specific time. The formula: price rate=  request volume/ generate volume.
 3. Logic of agent : Start sell action if price rate lower than a threshold. Start buy action if price rate higher than a threshold.
 
@@ -23,3 +23,19 @@ $ python main.py --generation --consumption --output
 ```
 
 
+### Model architecture
+
+
+### Action driver
+
+```
+1. Get request supply- rate
+    1) Idea: The price depends on request_of_customers/ productivity_of_product. 
+    https://www.youtube.com/watch?v=PHe0bXAIuk0
+    2) We try to find the best price rate based on above request-supply rate.
+    3) The following is the table show average request-supply rate () in 
+    request-supply rate= \sum_{i=1}^{10} t_i
+    
+
+2. 
+```
