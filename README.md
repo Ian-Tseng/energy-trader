@@ -34,7 +34,8 @@ $ python main.py --generation --consumption --output
     Reference url: https://www.youtube.com/watch?v=PHe0bXAIuk0
     2) We try to find the best price rate based on above request-supply rate.
     3) The following is the table show average request-supply rate () in 
-    request-supply rate= $$ x = {-b \pm \sqrt{b^2-4ac} \over 2a} $$
+    request-supply rate= <img src="https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}" title="\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}" />
+
 
 
 
