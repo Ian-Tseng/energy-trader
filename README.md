@@ -31,11 +31,12 @@ $ python main.py --generation --consumption --output
 ```
 1. Get request supply- rate
     1) Idea: The price depends on request_of_customers/ productivity_of_product. 
-    https://www.youtube.com/watch?v=PHe0bXAIuk0
+    Reference url: https://www.youtube.com/watch?v=PHe0bXAIuk0
     2) We try to find the best price rate based on above request-supply rate.
     3) The following is the table show average request-supply rate () in 
-    request-supply rate= \sum_{i=1}^{10} t_i
-    
+    request-supply rate= $$ x = {-b \pm \sqrt{b^2-4ac} \over 2a} $$
+
+
 
 2. 
 ```
