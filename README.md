@@ -53,7 +53,7 @@
 ### Agent
 
 ## Preprocess
-1. 計算 供需比 (request- supply rate)
+1. 計算 供需比 (request- supply rate, RSR)
     1) Idea: 價格根據供需比在變動。 供需比的公式如下： 需求量/ 供應量。 如果供需比顯示較高的值表示需求量大，供應量少， 價格趨向高， 相反的， 需求量少， 供應量大， 則呈現較小的值， 價格趨向低。
     Reference url: https://www.youtube.com/watch?v=PHe0bXAIuk0
 
@@ -98,16 +98,20 @@
     
     
 6. 動作策略
-    1) 先計算完可能觸發買進動作的所有時段與價格與數量。 得到所有的買進動作。 Trigger: 如果在特定時段供需比低於一個threshold for buy啟動buy action. 直到買進數量總和≈ 產出的總和 則停止。
+    1) 先計算完可能觸發買進動作的所有時段與價格與數量。 得到所有的買進動作。 Trigger: 如果在特定時段供需比低於一個threshold for buy啟動buy action. 直到買進數量總和> 產出的總和 則停止。
     
        買進動作= k, 目標時段與星期的平均交易數量= v, 買進數量= v* 0.8, 產出的總和= g
            
-        <img src="http://www.sciweavers.org/tex2img.php?eq=%5Csum_0%5Ek%20v%2A%200.8%20%20%20%5Capprox%20g%20%20&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" align="center" border="0" alt="\sum_0^k v* 0.8   \approx g  " width="122" height="53" />
+       <img src="http://www.sciweavers.org/tex2img.php?eq=1%20%28RSR%3C%20thresholdForBuy%20%5Cotimes%20%20%5Csum_0%5Ek%20v%2A%200.8%20%20%20%20%3C%20g%20%20%29%0A%2C%200%20else&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" align="center" border="0" alt="1 (RSR< thresholdForBuy \otimes  \sum_0^k v* 0.8    < g  ), 0 else" width="425" height="53" />
+
        
 
-    2) 如果在特定時段供需比高於一個threshold for sell， 啟動sell action. 
-    2) 
-    2) 我們找出所有的供需比裡10 percentile的最小值作為threshold for buy, 所有的供需比裡70 percentile的最大值作為threshold for sell。
+    2) 計算完可能觸發的所有買進動作後， 計算可能觸發的所有賣出動作， Trigger: 如果在特定時段供需比高於一個threshold for sell， 啟動sell action. 直到賣出數量>剩餘數量。
+       買進動作= k, 目標時段與星期的平均交易數量= v, 買進數量= v* 0.8, 買進的總和= b, 產出的總和= g, 消耗的總和= c, 剩餘= r
+       <img src="http://www.sciweavers.org/tex2img.php?eq=r%3D%20g%2B%20b-%20c&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" align="center" border="0" alt="r= g+ b- c" width="106" height="19" />
+       <img src="http://www.sciweavers.org/tex2img.php?eq=1%20%28RSR%3E%20thresholdForSell%20%5Cotimes%20%20%5Csum_0%5Ek%20v%20%20%20%20%3C%20r%20%20%29%0A%2C%200%20else&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" align="center" border="0" alt="1 (RSR> thresholdForSell \otimes  \sum_0^k v    < r  ), 0 else" width="372" height="53" />
+       
+    3) 我們找出所有的供需比裡10 percentile的最小值作為threshold for buy, 所有的供需比裡70 percentile的最大值作為threshold for sell。
     
 
 
