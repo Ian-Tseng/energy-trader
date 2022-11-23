@@ -101,8 +101,9 @@
     1) 先計算完可能觸發買進動作的所有時段與價格與數量。 得到所有的買進動作。 Trigger: 如果在特定時段供需比低於一個threshold for buy啟動buy action. 直到買進數量總和≈ 產出的總和 則停止。
     
        買進動作= k, 目標時段與星期的平均交易數量= v, 買進數量= v* 0.8, 產出的總和= g
-        \sum_0^k v* 0.8   \approx g                
-        ![equation](http://www.sciweavers.org/tex2img.php?eq=1%2Bsin%28mc%5E2%29&bc=White&fc=Green&im=jpg&fs=12&ff=arev&edit=)
+           
+        <img src="https://bit.ly/3AD0dkO" align="center" border="0" alt="\sum_0^k v* 0.8   \approx g  " width="122" height="53" />
+        ![equation](http://www.sciweavers.org/tex2img.php?eq=\sum_0^k v* 0.8   \approx g=White&fc=Green&im=jpg&fs=12&ff=arev&edit=)
        
 
     2) 如果在特定時段供需比高於一個threshold for sell， 啟動sell action. 
