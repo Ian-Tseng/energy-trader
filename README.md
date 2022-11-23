@@ -57,7 +57,7 @@
     1) Idea: 價格根據供需比在變動。 供需比的公式如下： 需求量/ 供應量。 如果供需比顯示較高的值表示需求量大，供應量少， 價格趨向高， 相反的， 需求量少， 供應量大， 則呈現較小的值， 價格趨向低。
     Reference url: https://www.youtube.com/watch?v=PHe0bXAIuk0
 
-    2) 我們試著找出在BID information裡的供需比， 公式如下： sum(generate of all familys)/ sum(consumption of all familys)。
+    2) 我們試著找出在BID information裡的供需比， 公式如下：  sum(buy of all familys)/ sum(sell of all familys)。
 
     3) 以下為顯示不同時段、不同星期下的供需比的範例。 
     
