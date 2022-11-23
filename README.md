@@ -59,7 +59,7 @@
 
         <img src="./rsr.png"/>
 
-    2) 根據上述idea， 我們試著找出在BID information裡的供需比， 公式如下：  sum(buy of all familys)/ sum(sell of all familys)。
+    2) 根據上述idea， 我們試著找出在BID information裡的供需比， 公式如下：  sum(buy of all familys in target time and weekday)/ sum(sell of all familys in target time and weekday)。
     
         <img src="./rsr_bid_info.png"/>
 
@@ -104,7 +104,7 @@
 
 
     2) 使用手中持有的剩餘能源作為參考數量， 並且在特定時段出現較高的供需比時賣出。 剩餘能源= ((產出的總和+ 購買的總和) - 消耗的總和)* 0.8。 這個值會在 * 0.8 避免售出過量的剩餘於能源， 導致需另外購買。 產出的總和是g, 購買的總和是b, 消耗的總和是c, 剩餘是 r= g+ b- c。
-    
+
         <img src="./amount_of_sell.png"/>
     
 
