@@ -57,12 +57,12 @@
     1) Idea: 價格根據供需比在變動。 供需比的公式如下： 需求量/ 供應量。 如果供需比顯示較高的值表示需求量大，供應量少， 價格趨向高， 相反的， 需求量少， 供應量大， 則呈現較小的值， 價格趨向低。
     Reference url: https://www.youtube.com/watch?v=PHe0bXAIuk0
 
-    2) 我們試著找出在BID information裡的供需比， 公式如下： sum(generate of all_familys)/ sum(consumption of all familys)
+    2) 我們試著找出在BID information裡的供需比， 公式如下： sum(generate of all familys)/ sum(consumption of all familys)
 
     3) 以下為顯示不同時段、不同星期下的供需比的範例。 
     
 
-    | Weekday | Hour     | Request-Storage rate |  
+    | Weekday | Hour     | Request-Supply rate |  
     |---------|----------|----------------------|
     | 5       | 00:00:00 | 835.68               |   
     | 5       | 01:00:00 | 333.27               | 
@@ -89,16 +89,26 @@
     
 4. 價格策略
     1) 參考價格使用目標時段，目標星期的平均價格。
-    2) 價格= 參考價格* 範圍0.9到1.2作為折扣， step= 1， 作為售出出價範圍。 價格=  參考價格* 範圍1.0到1.4作為折扣， step= 1， 作為買進出價範圍。 
+    2) 售出出價範圍= 參考價格* 範圍0.9到1.2作為折扣， step= 1， 作為售出出價範圍。 買價出價範圍=  參考價格* 範圍1.0到1.4作為折扣， step= 1， 作為買進出價範圍。 
     
 
 5. 數量策略
-    1) 使用產出的總和作為參考數量， 並且在特定時段出現較低的供需比時買進。 
+    1) 使用產出的總和作為參考數量， 並且在特定時段出現較低的供需比時買進。 買進數量= 目標時段與星期的平均交易數量* 0.8。
     2) 使用手中持有的剩餘能源作為參考數量， 並且在特定時段出現較高的供需比時賣出。 剩餘能源= (產出的總和+ 購買的總和) - 消耗的總和。 這個值會在 * 0.8 避免售出過量的剩餘於能源， 導致需另外購買。
     
     
 6. 動作策略
-    1) 如果在特定時段供需比高於一個threshold for sell， 啟動sell action. 如果在特定時段供需比低於一個threshold for buy啟動buy action.
+    1) 先計算完可能觸發買進動作的所有時段與價格與數量。 得到所有的買進動作。 Trigger: 如果在特定時段供需比低於一個threshold for buy啟動buy action. 直到買進數量總和≈ 產出的總和 則停止。
+    
+       買進動作= k, 目標時段與星期的平均交易數量= v, 買進數量= v* 0.8, 產出的總和= g
+         __ k                    
+        \     v *  0.8   approx g
+        /__ 0                    
+
+       
+
+    2) 如果在特定時段供需比高於一個threshold for sell， 啟動sell action. 
+    2) 
     2) 我們找出所有的供需比裡10 percentile的最小值作為threshold for buy, 所有的供需比裡70 percentile的最大值作為threshold for sell。
     
 
