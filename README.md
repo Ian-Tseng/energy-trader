@@ -57,7 +57,7 @@
     1) Idea: 價格根據供需比在變動。 供需比的公式如下： 需求量/ 供應量。 如果供需比顯示較高的值表示需求量大，供應量少， 價格趨向高， 相反的， 需求量少， 供應量大， 則呈現較小的值， 價格趨向低。
     Reference url: https://www.youtube.com/watch?v=PHe0bXAIuk0
 
-    2) 我們試著找出在BID information裡的供需比， 公式如下： sum(generate of all familys)/ sum(consumption of all familys)
+    2) 我們試著找出在BID information裡的供需比， 公式如下： sum(generate of all familys)/ sum(consumption of all familys)。
 
     3) 以下為顯示不同時段、不同星期下的供需比的範例。 
     
@@ -69,7 +69,7 @@
     | 5       | 02:00:00 | 118.87               | 
 
 2. 計算不同時間、 不同星期的平均交易量與平均成交價格
-    1) 我們計算在不同時段、 不同星期的平均交易量與平均成交價格
+    1) 我們計算在不同時段、 不同星期的平均交易量與平均成交價格。
     2) 以下為顯示不同時段、 不同星期的平均交易量與平均成交價格範例。 以上兩筆與下兩筆為對照， 可以看到在特定時段、特定星期的交易量與交易價格成反比，交易量越多成交價格越低， 相反的交易量越少， 成交價格越高。 
 
     | Weekday | Hour     | Mean trade volume | Mean trade price |   
@@ -100,14 +100,14 @@
 6. 動作策略
     1) 先計算完可能觸發買進動作的所有時段與價格與數量。 得到所有的買進動作。 Trigger: 如果在特定時段供需比低於一個threshold for buy啟動buy action. 直到買進數量總和> 產出的總和 則停止。
     
-       買進動作= k, 目標時段與星期的平均交易數量 v, 買進數量 v* 0.8, 產出的總和 g
+       買進動作 k, 目標時段與星期的平均交易數量 v, 買進數量 v* 0.8, 產出的總和 g
            
        <img src="./trigger_for_buy.png"/>
 
        
 
-    2) 計算完可能觸發的所有買進動作後， 計算可能觸發的所有賣出動作， Trigger: 如果在特定時段供需比高於一個threshold for sell， 啟動sell action. 直到賣出數量>剩餘數量。
-       買進動作= k, 目標時段與星期的平均交易數量= v, 買進數量= v* 0.8, 買進的總和 b, 產出的總和 g, 消耗的總和 c, 剩餘 r= g+ b- c
+    2) 計算完可能觸發的所有買進動作後， 計算可能觸發的所有賣出動作， Trigger: 如果在特定時段供需比高於一個threshold for sell， 啟動sell action. 直到賣出數量總和>剩餘數量則停止。
+       買進動作 k, 目標時段與星期的平均交易數量 v, 買進數量= v* 0.8, 買進的總和 b, 賣出的總和 s, 產出的總和 g, 消耗的總和 c, 剩餘 r= g+ b- c
 
        <img src="./trigger_for_sell.png" />
 
