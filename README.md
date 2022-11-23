@@ -102,8 +102,7 @@
     
        買進動作= k, 目標時段與星期的平均交易數量= v, 買進數量= v* 0.8, 產出的總和= g
            
-        <img src="https://bit.ly/3AD0dkO" align="center" border="0" alt="\sum_0^k v* 0.8   \approx g  " width="122" height="53" />
-        ![equation](http://www.sciweavers.org/tex2img.php?eq=\sum_0^k v* 0.8   \approx g=White&fc=Green&im=jpg&fs=12&ff=arev&edit=)
+        <img src="http://www.sciweavers.org/tex2img.php?eq=%5Csum_0%5Ek%20v%2A%200.8%20%20%20%5Capprox%20g%20%20&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" align="center" border="0" alt="\sum_0^k v* 0.8   \approx g  " width="122" height="53" />
        
 
     2) 如果在特定時段供需比高於一個threshold for sell， 啟動sell action. 
