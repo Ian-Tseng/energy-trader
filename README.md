@@ -111,6 +111,9 @@
 
        <img src="./r_g_b_c.png" />
 
+
+
+
        <img src="./trigger_for_sell.png" />
 
     3) 我們找出所有的供需比裡10 percentile的最小值作為threshold for buy, 所有的供需比裡70 percentile的最大值作為threshold for sell。
