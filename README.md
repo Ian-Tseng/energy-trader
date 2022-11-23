@@ -102,17 +102,17 @@
     
        買進動作= k, 目標時段與星期的平均交易數量= v, 買進數量= v* 0.8, 產出的總和= g
            
-       <img src=".trigger_for_buy.png"/>
+       <img src="./trigger_for_buy.png"/>
 
        
 
     2) 計算完可能觸發的所有買進動作後， 計算可能觸發的所有賣出動作， Trigger: 如果在特定時段供需比高於一個threshold for sell， 啟動sell action. 直到賣出數量>剩餘數量。
        買進動作= k, 目標時段與星期的平均交易數量= v, 買進數量= v* 0.8, 買進的總和= b, 產出的總和= g, 消耗的總和= c, 剩餘= r
 
-       <img src=".r_g_b_c.png" />
+       <img src="./r_g_b_c.png" />
 
-       <img src=".trigger_for_sell.png" />
-       
+       <img src="./trigger_for_sell.png" />
+
     3) 我們找出所有的供需比裡10 percentile的最小值作為threshold for buy, 所有的供需比裡70 percentile的最大值作為threshold for sell。
     
 
