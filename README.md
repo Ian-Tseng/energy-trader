@@ -3,37 +3,11 @@
 
 
 
-### Environment
-```
-The following is the steps to build pipenv environment:
-$ cd energy_trader
-$ pipenv install 
-$ pipenv shell
-$ python --3.8
-
-```
-### Usage
-
-```
-$ python main.py --generation --consumption --output
-    
-```
-
-
-
 
 ### Introduction
 
-
-### 
-
-
-
-```
-
-
 ### Model
-```
+
 ## 資料前處理
 
 作業中的 training_data 是將每戶 2018/01/01 - 2018/08/31 用電的資訊以 csv 檔案格式個別存放，時間單位是 hour 。因為作業的問題是希望透過過去七天的訊息，來產生下一天的預測結果。因此在建構訓練數據的流程是將時間序列的資料以每 7+1 天的範圍來擷取，前七天當作 feature ，第八天當作 target ，示意圖如下。時間單位則是將一天 24 小時分成 4 時段，讓時間的變數可以數值化，當作訓練時的特徵使用。
@@ -74,19 +48,16 @@ $ python main.py --generation --consumption --output
 
 路徑都不要改，使用 `python test.py` 指令可以獲得測試資料下一天的預測結果。
 
-```
 
 
 ### Agent
 
-
-```
 ## Preprocess
 1. 計算 供需比 (request- supply rate)
     1) Idea: 價格根據供需比在變動。 供需比的公式如下： 需求量/ 供應量。 如果供需比顯示較高的值表示需求量大，供應量少， 價格趨向高， 相反的， 需求量少， 供應量大， 則呈現較小的值， 價格趨向低。
     Reference url: https://www.youtube.com/watch?v=PHe0bXAIuk0
 
-    2) 我們試著找出在這交易資訊裡的供需比， 公式如下： sum(generate of all_familys)/ sum(consumption of all familys)
+    2) 我們試著找出在BID information裡的供需比， 公式如下： sum(generate of all_familys)/ sum(consumption of all familys)
 
     3) 以下為顯示不同時段、不同星期下的供需比的範例。 
     
@@ -99,48 +70,44 @@ $ python main.py --generation --consumption --output
 
 2. 計算不同時間、 不同星期的平均交易量與平均成交價格
     1) 我們計算在不同時段、 不同星期的平均交易量與平均成交價格
-    2) 以下為顯示不同時段、 不同星期的平均交易量與平均成交價格範例。 以上兩筆與下兩筆為對照， 可以看到在特定時段、特定星期的交易量與交易價個成反比，交易量越多成交價格越低， 相反的交易量越少， 成交越高。 
+    2) 以下為顯示不同時段、 不同星期的平均交易量與平均成交價格範例。 以上兩筆與下兩筆為對照， 可以看到在特定時段、特定星期的交易量與交易價格成反比，交易量越多成交價格越低， 相反的交易量越少， 成交價格越高。 
 
-    | Weekday | Hour     | Mean trade volume | Mean trade price |   |
-    |---------|----------|-------------------|------------------|---|
-    | 1       | 15:00:00 | 0.192             | 2.241            |   |
-    | 2       | 16:00:00 | 0.186             | 2.257            |   |
-    | 6       | 20:00:00 | 16.318            | 1.668            |   |
-    | 4       | 22:00:00 | 20.932            | 1.763            |   |
+    | Weekday | Hour     | Mean trade volume | Mean trade price |   
+    |---------|----------|-------------------|------------------|
+    | 1       | 15:00:00 | 0.192             | 2.241            |   
+    | 2       | 16:00:00 | 0.186             | 2.257            |   
+    | 6       | 20:00:00 | 16.318            | 1.668            |   
+    | 4       | 22:00:00 | 20.932            | 1.763            |   
 
-    3) 下圖顯示交易量與成交價格的關係。
+    3) 下圖顯示交易量與成交價格的關係。 可以看到交易量與交易價格成反比。
     <img src='./trade_volume_price_relation.png' />
 
 
-2. 預測出target日期的產出與消耗
+3. 預測target日期的產出與消耗
     1) 先從Model 預測出target日期的產出與消耗。
     3) 計算每個時段產出的總和與消耗的總和。 
     
-3. 價格策略
-    1) 參考價格使用目標時段，目標星期的平均價個The reference price using the trader price in target time.
-    2) The price we take from range 0.9 to 1.2 as discount on reference price, the step= 0.05. 
-    3) If the trader price is invalid, which means the target trader at that time is not success and defualt refernce price would use market price. The dscount range from 0.5 to 0.8.
- 
-
-4. Amount strategy
-    1) We use sum of generate and sum of consumption as reference amount.
-    2) We try to buy sum of the consumption in a lowest RSR rate at target time.
-    3) We try to sell all of the remaining of energy in a highest RSR rate at target time. The remaining of energy = (sum of generation+ sum of buy)- sum of consumption. The amount would multiply by 0.8  in order to prevent the excession of sum of consumption
-    
-5. Action strategy
-    1) We initiate sell action if RSR rate is higher than a threshold at target time. In constrast, take buy action if RSR rate is higher than a threshold at target time.
-    2) We get the threshold by find a value lower than percentitle 20 as threshold for buy action and high than percentile 70.
+4. 價格策略
+    1) 參考價格使用目標時段，目標星期的平均價格。
+    2) 價格= 參考價格* 範圍0.9到1.2作為折扣， step= 1， 作為售出出價範圍。 價格=  參考價格* 範圍1.0到1.4作為折扣， step= 1， 作為買進出價範圍。 
     
 
+5. 數量策略
+    1) 使用產出的總和作為參考數量， 並且在特定時段出現較低的供需比時買進。 
+    2) 使用手中持有的剩餘能源作為參考數量， 並且在特定時段出現較高的供需比時賣出。 剩餘能源= (產出的總和+ 購買的總和) - 消耗的總和。 這個值會在 * 0.8 避免售出過量的剩餘於能源， 導致需另外購買。
+    
+    
+6. 動作策略
+    1) 如果在特定時段供需比高於一個threshold for sell， 啟動sell action. 如果在特定時段供需比低於一個threshold for buy啟動buy action.
+    2) 我們找出所有的供需比裡10 percentile的最小值作為threshold for buy, 所有的供需比裡70 percentile的最大值作為threshold for sell。
+    
 
-6. Improve profit by bid result
-    1) As 1. 4) mentioned, we get RSR from trade information data. The trade information data show when the needed request and sell request is higher or lower, we  based on this information to decide when is a good time to initate acion.
 
-## Action trigger condition
-```
-1. We initate buy action if RSR rate is lower than a threshold and target volume = trade history volume* 0.8  at target time.
-2. We initate sell action if RSR rate is higher than a threshold at targe time and target volume = trade history volume at target time.
-```
+7. 透過BID information 增加利潤的方式
+    1) 如1. 2) 提到， 找出在BID information裡的供需比。 根據BID information裡找出的供需比決定什麼時段能夠以較低的價格買進， 及較高的價格賣出。
+
+
+
 
 
 
